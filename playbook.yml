@@ -21,7 +21,6 @@
         repo: deb https://artifacts.elastic.co/packages/7.x/apt stable main
         state: present
         filename: elastic-7.x.list
-        update_cache: yes
     - name: Instalar ElasticSearch
       apt:
         name: elasticsearch

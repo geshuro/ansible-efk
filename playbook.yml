@@ -25,10 +25,10 @@
       apt:
         upgrade: yes
         force_apt_get: yes
+        cache_valid_time: 3600
     - name: Instalar ElasticSearch
       apt:
         name: elasticsearch
-        update_cache: yes
     #Configuracion de ElasticSearch
     - name: Cambiar valores de memoria JVM para ElasticSearch
       lineinfile:

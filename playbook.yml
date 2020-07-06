@@ -24,7 +24,7 @@
       become: true
       apt:
         upgrade: yes
-        update_cache: yes
+        force_apt_get: yes
     - name: Instalar ElasticSearch
       apt:
         name: elasticsearch

@@ -4,7 +4,8 @@
 ---
 - name: Playbook ElasticSearch
   become: true
-  hosts: all
+  hosts: 127.0.0.1
+  connection: local
   tasks:
     #Instalacion de ElasticSearch
     - name: Descargar key ElasticSearch
@@ -27,8 +28,7 @@
     - name: Instalar ElasticSearch
       apt:
         name: elasticsearch
-        state: present
-
+        update_cache: yes
     #Configuracion de ElasticSearch
     - name: Cambiar valores de memoria JVM para ElasticSearch
       lineinfile:
@@ -42,29 +42,39 @@
         line: -Xmx8g
     - name: Crear directorio para servicio ElasticSearch
       file:
-        path: /etc/systemd/system/elascticsearch.service.d
+        path: /etc/systemd/system/elasticsearch.service.d
         state: directory
         mode: '0755'
     - name: Crear archivo de configuracion de servicio ElasticSearch
       file:
-        path: /etc/systemd/system/elascticsearch.service.d/elasticsearch.conf
+        path: /etc/systemd/system/elasticsearch.service.d/elasticsearch.conf
         state: touch
         mode: u=rw,g=r,o=r
     - name: Configurar archivo de configuracion de servicio ElasticSearch
       blockinfile:
-        path: /etc/systemd/system/elascticsearch.service.d/elasticsearch.conf
+        path: /etc/systemd/system/elasticsearch.service.d/elasticsearch.conf
+        marker: ""
         block: |
           [Service]
           LimitNOFILE=131072
-          LimitNOPROC=8192
+          LimitNPROC=8192
           LimitMEMLOCK=infinity
           LimitFSIZE=infinity
           LimitAS=infinity
+    - name: Configurar archivo de configuracion de servicio ElasticSearch
+      lineinfile:
+        path: /etc/systemd/system/elasticsearch.service.d/elasticsearch.conf
+        state: absent
+        regexp: '^$'
     - name: Crear si no existe archivo y configurar con parametros de mapeadores.
       lineinfile:
         path: /etc/sysctl.d/70-elasticsearch.conf
-        line: vm.max_map_count = 262144
+        line: vm.max_map_count=262144
         create: yes
+    - name: Eliminar archivo de configuracion de ElasticSearch por defecto
+      file:
+         path: /etc/elasticsearch/elasticsearch.yml
+         state: absent
     - name: Crear archivo de configuracion de ElasticSearch
       file:
         path: /etc/elasticsearch/elasticsearch.yml

@@ -1,0 +1,107 @@
+##################################################
+# Playbook ElasticSearch en Ubuntu 18.04
+##################################################
+---
+- name: Playbook ElasticSearch
+  become: true
+  hosts: all
+  tasks:
+    #Instalacion de ElasticSearch
+    - name: Descargar key ElasticSearch
+      apt_key:
+        url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+        state: present
+    - name: Instalar apt-transport-https
+      apt:
+        name: apt-transport-https
+        state: present
+    - name: Ejecucion de setencia
+      command: echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+    - name: Ejecucion de setencia
+      command: sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+    - name: Actualizar paquetes apt
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+    - name: Instalar ElasticSearch
+      apt:
+        name: elasticsearch
+        state: present
+
+    #Configuracion de ElasticSearch
+    - name: Cambiar valores de memoria JVM para ElasticSearch
+      lineinfile:
+        path: /etc/elasticsearch/jvm.options
+        regexp: '^-Xms1g'
+        line: -Xms8g
+    - name: Cambiar valores de memoria JVM
+      lineinfile:
+        path: /etc/elasticsearch/jvm.options
+        regexp: '^-Xmx1g'
+        line: -Xmx8g
+    - name: Crear directorio para servicio ElasticSearch
+      file:
+        path: /etc/systemd/system/elascticsearch.service.d
+        state: directory
+        mode: '0755'
+    - name: Crear archivo de configuracion de servicio ElasticSearch
+      file:
+        path: /etc/systemd/system/elascticsearch.service.d/elasticsearch.conf
+        state: touch
+        mode: u=rw,g=r,o=r
+    - name: Configurar archivo de configuracion de servicio ElasticSearch
+      blockinfile:
+        path: /etc/systemd/system/elascticsearch.service.d/elasticsearch.conf
+        block: |
+          [Service]
+          LimitNOFILE=131072
+          LimitNOPROC=8192
+          LimitMEMLOCK=infinity
+          LimitFSIZE=infinity
+          LimitAS=infinity
+    - name: Crear si no existe archivo y configurar con parametros de mapeadores.
+      lineinfile:
+        path: /etc/sysctl.d/70-elasticsearch.conf
+        line: vm.max_map_count = 262144
+        create: yes
+    - name: Crear archivo de configuracion de ElasticSearch
+      file:
+        path: /etc/elasticsearch/elasticsearch.yml
+        state: touch
+        mode: u=rw,g=r,o=r
+    - name: Escribir archivo de configuracion de ElasticSearch
+      blockinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        block: |
+          cluster.name: lab
+          node.name: lab1
+          path.data: /var/lib/elasticsearch
+          path.logs: /var/log/elasticsearch
+          bootstrap.memory_lock: true
+          network.host: 0.0.0.0
+          http.port: 9200
+          discovery.type: 'single-node'
+          indices.query.bool.max_clause_count: 8192
+          search.max_buckets: 250000
+          action.destructive_requires_name: 'true'
+          reindex.remote.whitelist: '*:*'
+          xpack.monitoring.enabled: 'true'
+          xpack.monitoring.collection.enabled: 'true'
+          xpack.monitoring.collection.interval: 30s
+          xpack.security.enabled: 'true'
+          xpack.security.audit.enabled: 'false'
+          node.ml: 'false'
+          xpack.ml.enabled: 'false'
+          xpack.watcher.enabled: 'false'
+          xpack.ilm.enabled: 'true'
+          xpack.sql.enabled: 'true'
+
+    #Inciar servicio de ElasticSearch
+    - name: Reiniciar el systemd a leer configuraciones
+      systemd:
+        daemon_reload: yes
+    - name: Iniciar el servicio de ElasticSearch
+      systemd:
+        state: started
+        name: elasticsearch

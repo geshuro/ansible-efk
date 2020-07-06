@@ -16,19 +16,17 @@
       apt:
         name: apt-transport-https
         state: present
-    - name: Ejecucion de setencia
-      command: echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
-    - name: Ejecucion de setencia
-      command: sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
-    - name: Actualizar paquetes apt
-      become: true
-      apt:
-        upgrade: yes
-        force_apt_get: yes
-        cache_valid_time: 3600
+    - name: Instalar apt repositorio
+      apt_repository:
+        repo: deb https://artifacts.elastic.co/packages/7.x/apt stable main
+        state: present
+        filename: elastic-7.x.list
+        update_cache: yes
     - name: Instalar ElasticSearch
       apt:
         name: elasticsearch
+        state: present
+        update_cache: yes
     #Configuracion de ElasticSearch
     - name: Cambiar valores de memoria JVM para ElasticSearch
       lineinfile:
@@ -73,8 +71,8 @@
         create: yes
     - name: Eliminar archivo de configuracion de ElasticSearch por defecto
       file:
-         path: /etc/elasticsearch/elasticsearch.yml
-         state: absent
+        path: /etc/elasticsearch/elasticsearch.yml
+        state: absent
     - name: Crear archivo de configuracion de ElasticSearch
       file:
         path: /etc/elasticsearch/elasticsearch.yml
@@ -99,7 +97,7 @@
           xpack.monitoring.enabled: 'true'
           xpack.monitoring.collection.enabled: 'true'
           xpack.monitoring.collection.interval: 30s
-          xpack.security.enabled: 'true'
+          xpack.security.audit.enabled: 'false'
           node.ml: 'false'
           xpack.ml.enabled: 'false'
           xpack.watcher.enabled: 'false'

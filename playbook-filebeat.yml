@@ -37,7 +37,7 @@
         mode: u=rw,g=r,o=r
     - name: Configurar archivo de servicio FileBeat
       blockinfile:
-        dest: /etc/filebeat/filebeat.yml
+        name: /etc/filebeat/filebeat.yml
         marker: ""
         block: |
           filebeat.modules:
@@ -56,7 +56,7 @@
             hosts: ["10.36.9.151:9200"]
     - name: Limpiar archivo configuracion FileBeat
       lineinfile:
-        dest: /etc/filebeat/filebeat.yml
+        name: /etc/filebeat/filebeat.yml
         state: absent
         regexp: '^$'
     #Inciar servicio de FileBeat

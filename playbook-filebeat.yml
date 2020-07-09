@@ -18,7 +18,7 @@
         state: present
     - name: Instalar apt repositorio
       apt_repository:
-        repo: deb https://artifacts.elastic.co/packages/7.6.1/apt stable main
+        repo: deb https://artifacts.elastic.co/packages/7.x/apt stable main
         state: present
         filename: elastic-7.6.1.list
     - name: Instalar FileBeat

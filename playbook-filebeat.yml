@@ -25,7 +25,6 @@
       apt:
         name: filebeat
         state: present
-        update_cache: yes
     #Configuracion de FileBeat
     - name: Eliminar archivo de configuracion de FileBeat por defecto
       file:

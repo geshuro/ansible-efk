@@ -60,9 +60,6 @@
         state: absent
         regexp: '^$'
     #Inciar servicio de FileBeat
-    - name: Reiniciar el systemd a leer configuraciones
-      systemd:
-        daemon_reload: yes
     - name: Iniciar el servicio de FileBeat
       systemd:
         name: filebeat

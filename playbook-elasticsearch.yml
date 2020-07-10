@@ -93,16 +93,6 @@
           search.max_buckets: 250000
           action.destructive_requires_name: 'true'
           reindex.remote.whitelist: '*:*'
-          xpack.monitoring.enabled: 'true'
-          xpack.monitoring.collection.enabled: 'true'
-          xpack.monitoring.collection.interval: 30s
-          xpack.security.audit.enabled: 'false'
-          node.ml: 'false'
-          xpack.ml.enabled: 'false'
-          xpack.watcher.enabled: 'false'
-          xpack.ilm.enabled: 'true'
-          xpack.sql.enabled: 'true'
-
     #Inciar servicio de ElasticSearch
     - name: Reiniciar el systemd a leer configuraciones
       systemd:

@@ -53,7 +53,7 @@
                   - "/usr/local/kafka/logs/kafka-*.log*"
           output.elasticsearch:
             enabled: true
-            hosts: ["10.36.9.189:9200"]
+            hosts: ["{{hostnameelasticsearch}}"]
     - name: Limpiar archivo configuracion FileBeat
       lineinfile:
         name: /etc/filebeat/filebeat.yml

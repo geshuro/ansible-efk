@@ -1,0 +1,35 @@
+metricbeat.modules: 
+- module: system 
+  metricsets: 
+    - cpu 
+    - load 
+    - memory 
+    - network 
+    - process 
+    - process_summary 
+    - uptime 
+    - socket_summary 
+  enabled: true 
+  period: 10s 
+  processes: ['.*'] 
+  cpu.metrics:  ["percentages","normalized_percentages"] 
+  core.metrics: ["percentages"] 
+- module: kafka 
+  metricsets: 
+    - partition 
+    - consumergroup 
+  enabled: true 
+  period: 10s 
+  hosts: ["localhost:9092"] 
+setup.template.settings: 
+  index.number_of_shards: 1 
+  index.codec: best_compression 
+setup.kibana: 
+  host: "10.36.9.215:30001" 
+  protocol: "http" 
+output.elasticsearch: 
+  hosts: ["10.36.9.89:9200"] 
+  protocol: "http" 
+processors: 
+  - add_host_metadata: ~ 
+  - add_cloud_metadata: ~

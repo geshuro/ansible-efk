@@ -1,0 +1,42 @@
+---
+elasticsearchHosts: 
+replicas: 1
+image: "docker.elastic.co/kibana/kibana"
+imageTag: "7.6.1"
+imagePullPolicy: "IfNotPresent"
+resources:
+  requests:
+    cpu: "100m"
+    memory: "500Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1Gi"
+protocol: http
+serverHost: "0.0.0.0"
+healthCheckPath: "/app/kibana"
+podSecurityContext:
+  fsGroup: 1000
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  runAsUser: 1000
+serviceAccount: ""
+priorityClassName: ""
+httpPort: 5601
+updateStrategy:
+  type: "Recreate"
+service:
+  type: ClusterIP
+  port: 5601
+  nodePort: ""
+ingress:
+  enabled: false
+  path: /
+readinessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 3
+  timeoutSeconds: 5

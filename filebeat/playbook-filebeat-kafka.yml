@@ -47,10 +47,10 @@
                 var.kafka_home: 
                     /opt/kafka/kafka_2.12-2.5.0
                 var.paths: 
-                  - "/opt/kafka/kafka_2.12-2.5.0/logs/controller.log*" 
-                  - "/opt/kafka/kafka_2.12-2.5.0/logs/server.log*" 
-                  - "/opt/kafka/kafka_2.12-2.5.0/logs/state-change.log*" 
-                  - "/opt/kafka/kafka_2.12-2.5.0/logs/kafka-*.log*" 
+                  - "/usr/local/kafka/logs/controller.log*" 
+                  - "/usr/local/kafka/logs/server.log*" 
+                  - "/usr/local/kafka/logs/state-change.log*" 
+                  - "/usr/local/kafka/logs/kafka-*.log*" 
           setup.ilm.enabled: false
           setup.template.settings: 
             index.number_of_shards: 1 

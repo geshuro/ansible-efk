@@ -8,7 +8,7 @@
   connection: local 
   tasks: 
     #Instalacion de FileBeat 
-    - name: Descargar key ElasticSearch 
+    - name: Descargar key Elastic 
       apt_key: 
         url: https://artifacts.elastic.co/GPG-KEY-elasticsearch 
         state: present 
